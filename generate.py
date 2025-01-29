@@ -63,7 +63,7 @@ def main():
     translation_dir = torch.load(args.trans_dir_path)
 
     intervention_dir = translation_dir
-    intervention_layers = list(range(model.cfg.n_layers)) # all layers
+    intervention_layers = list(range(model.cfg.n_layers))
 
     hook_fn = functools.partial(util_functions.direction_ablation_hook,direction=intervention_dir)
     fwd_hooks = [(utils.get_act_name(act_name, l), hook_fn) for l in intervention_layers for act_name in ['resid_pre', 'resid_mid', 'resid_post']]
@@ -73,34 +73,13 @@ def main():
 
     del model, tokenizer
     gc.collect(); torch.cuda.empty_cache()
-
-    # Loading translation model and doing translations
-    model = MBartForConditionalGeneration.from_pretrained("abdulwaheed1/english-to-urdu-translation-mbart")
-    tokenizer = MBart50TokenizerFast.from_pretrained("abdulwaheed1/english-to-urdu-translation-mbart")
-    tokenizer.src_lang = "en_XX"
-    # encoded_en = tokenizer(intervention_generations, return_tensors="pt", padding=True)
-    # generated_tokens = model.generate(
-    #     **encoded_en,
-    #     forced_bos_token_id=tokenizer.lang_code_to_id["ur_PK"]
-    # )
-    # translations = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-
-    translations=[]
-    for intervention_generation in tqdm(intervention_generations, desc="Running translation"):
-        encoded_en = tokenizer(intervention_generation, return_tensors="pt", padding=True)
-        generated_tokens = model.generate(
-            **encoded_en,
-            forced_bos_token_id=tokenizer.lang_code_to_id["ur_PK"]
-        )
-        temp = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-        translations.append(temp[0])
     
     output_file = args.output_dir
 
     with open(output_file, "w", encoding="utf-8", newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["Sr No.", "Original Instruction", "Translated Instruction", 
-                        "Baseline Completion", "Intervention Completion", "Translated Completion (Final Output)"])
+                        "Baseline Completion", "Internal latent response"])
         
         for i in tqdm(range(len(urdu_test))):
             query_num = f"Query {i}"
@@ -108,9 +87,8 @@ def main():
             translated_instruction = repr(english_test[i])            
             baseline_completion = textwrap.fill(repr(baseline_generations[i]), width=100)
             intervention_completion = textwrap.fill(repr(intervention_generations[i]), width=100)
-            translation = translations[i]            
             writer.writerow([query_num, original_instruction, translated_instruction, 
-                            baseline_completion, intervention_completion, translation])
+                            baseline_completion, intervention_completion])
 
 if __name__ == "__main__":
     main()

@@ -18,10 +18,8 @@ Following columns can be found in CSV
 |----------------------------------|-------------------------------------------------------------------------------------------------------------|
 | **Original Instruction**         | This is the input instruction in Urdu given to MALT.                                                       |
 | **Translated Instruction**       | This is the English translation of the input instruction. (not part of our methodology) |
-| **Baseline Completion**          | This is the output from the original unedited LLM in Urdu.                                                 |
-| **Intervention Completion**      | This is the output from the edited LLM in English after ablating translation features.                                |
-| **Translated Completion (Final Output)** | This is the final output generated from MALT after translation of the intervention completion.                     |
-
+| **Baseline Completion**          | This is the output from the LLM in Urdu (low resource language).                                                 |
+| **Internal latent response**      | This is the internal latent response in English we get after ablating translation features.                                |
 
 **Translated Instruction** column is solely for understanding of English speakers and not part of our methodology or seen by MALT.
 
