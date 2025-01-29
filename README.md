@@ -1,4 +1,4 @@
-# _MALT: Mechanistic Ablation of Lossy Translation_ in LLMs for low resource languages
+# Understanding vs. Generation: LLMs Are Better at Comprehending Low-Resource Languages Like Urdu Than Generating Text in Them
 
 To be published soon. 
 
@@ -21,7 +21,7 @@ Following columns can be found in CSV
 | **Baseline Completion**          | This is the output from the LLM in Urdu (low resource language).                                                 |
 | **Internal latent response**      | This is the internal latent response in English we get after ablating translation features.                                |
 
-**Translated Instruction** column is solely for understanding of English speakers and not part of our methodology or seen by MALT.
+**Translated Instruction** column is solely for understanding of English speakers and not part of our methodology.
 
 ## Deployment
 
